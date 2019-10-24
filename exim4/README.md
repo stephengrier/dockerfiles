@@ -23,9 +23,9 @@ variables.
 
 ## Virtual domain configuration
 
-The MTA supports virtual domain configuration for the routing of mail to local
-addresses to maildrop servers. It will look for an alias file for each local
-domain in the following location:
+The MTA supports virtual domain configuration for the routing of mail to
+maildrop servers. It will look for an alias file for each local domain in the
+following location:
 
 ```
 $ cat /etc/exim/virtualdomains/example.com
@@ -33,7 +33,8 @@ john: john@imap.example.com
 ```
 
 When routing mail for `john@example.com` the MTA will then deliver mail to
-`john@imap.example.com`.
+`john@imap.example.com`. For this to be useful the domains will also need to be
+configured as LOCAL_DOMAINS.
 
 You can bind-mount the files into the container with the docker `-v` option like
 so:
@@ -52,13 +53,13 @@ The run a simple local MTA to relay locally generated mail out to the internet
 via DNS:
 
 ```
-docker run --name "mta" -d stephengrier/exim4
+docker run --name "mta" -d -p 25:8025 stephengrier/exim4
 ```
 
 To smartroute all mail to an upstream MTA:
 
 ```
-docker run --name "mta" -d \
+docker run --name "mta" -d -p 25:8025 \
   -e SMARTHOST=smarthost.example.com \
   stephengrier/exim4
 ```
@@ -67,8 +68,8 @@ To accept mail from the internet for a local mail domain to be delivered to a
 local maildrop server:
 
 ```
-docker run --name "mta" -d \
-  -v $(pwd)/stephengrier.com:/etc/exim/virtualdomains/example.com \
+docker run --name "mta" -d -p 25:8025 \
+  -v $(pwd)/example.com:/etc/exim/virtualdomains/example.com \
   -e LOCAL_DOMAINS=example.com \
   -e RELAY_FROM_DOMAINS= \
   -e CYRUS_DOMAIN=imap.example.com \
