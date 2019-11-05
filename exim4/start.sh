@@ -8,6 +8,7 @@ sed -i "s/X_RELAY_TO_USERS_X/${RELAY_TO_USERS}/" /etc/exim/exim.conf
 sed -i "s|X_RELAY_FROM_HOSTS_X|${RELAY_FROM_HOSTS}|" /etc/exim/exim.conf
 sed -i "s|X_HOSTS_PROXY_X|${HOSTS_PROXY}|" /etc/exim/exim.conf
 sed -i "s/X_CYRUS_DOMAIN_X/${CYRUS_DOMAIN}/g" /etc/exim/exim.conf
+sed -i "s/X_MX_FAIL_DOMAINS_X/${MX_FAIL_DOMAINS}/" /etc/exim/exim.conf
 
 chown exim:exim /proc/self/fd/1
 
