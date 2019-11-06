@@ -1,15 +1,16 @@
-FROM alpine:3.10
+FROM ubuntu:rolling
 
-RUN apk --no-cache add exim && \
-    mkdir -p /var/log/exim /var/spool/exim /usr/lib/exim /etc/exim/virtualdomains && \
-    ln -sf /dev/stdout /var/log/exim/mainlog && \
-    ln -sf /dev/stderr /var/log/exim/panic && \
-    ln -sf /dev/stderr /var/log/exim/reject && \
-    chown -R exim:exim /var/log/exim /var/spool/exim /usr/lib/exim && \
-    chmod 0755 /usr/sbin/exim && \
-    sed -i 's|/var/spool/exim:/sbin/nologin|/var/spool/exim:/bin/ash|' /etc/passwd
+RUN apt-get update && \
+    apt-get -y install exim4-daemon-heavy && \
+    mkdir -p /var/log/exim4 /var/spool/exim4 /usr/lib/exim4 /etc/exim4/virtualdomains && \
+    ln -sf /dev/stdout /var/log/exim4/mainlog && \
+    ln -sf /dev/stderr /var/log/exim4/panic && \
+    ln -sf /dev/stderr /var/log/exim4/reject && \
+    chown -R Debian-exim:Debian-exim /var/log/exim4 /var/spool/exim4 /usr/lib/exim4 && \
+    chmod 0755 /usr/sbin/exim4 && \
+    sed -i 's|/var/spool/exim4:/usr/sbin/nologin|/var/spool/exim4:/bin/bash|' /etc/passwd
 
-COPY exim.conf /etc/exim/exim.conf
+COPY exim.conf /etc/exim4/exim4.conf
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
